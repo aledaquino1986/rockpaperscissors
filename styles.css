@@ -18,7 +18,8 @@ body {
 
 .container {
   display: grid;
-  grid-template: 1fr 20% 20% 1fr /  1fr 1fr 1fr;
+  grid-template: 0.75fr 15% 25% 1fr /  1fr 1fr 1fr;
+  grid-row-gap: 10px;
        
   grid-template-areas:  "title title title"
                         ". round1 ."
@@ -26,10 +27,18 @@ body {
                        "player-choice results cpu-choice";
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 input {
   text-align: center;
   font-size: 1.5rem;
   border-radius: 10px;
+  outline: none;
 }
 
 p {
@@ -87,7 +96,7 @@ section {
   grid-area: player-choice;
 }
 
-.results {
+.winner-section {
   grid-area: results;
 }
 
@@ -163,7 +172,7 @@ display: flex;
 flex-direction: column;
 justify-content: flex-end;
 align-items: center;
-margin: 5rem;
+margin: 2rem;
 }
 
 .center-title h1 {
@@ -211,8 +220,12 @@ button:active {
 
 
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+  
 
+  body {
+    max-width: 100vh;
+  }
   .title {
     order: -4;
   }
@@ -250,8 +263,11 @@ button:active {
     order: 10;
   }
 
-  .results {
+  .winner-section {
     order:-1;
+    border: 2px solid white;
+    border-radius: 3rem;
+    margin: 2rem;
   }
 
   .round {
