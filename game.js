@@ -1,129 +1,249 @@
-const computerPlay = function () {
-  let randomNumber = Math.ceil(Math.random() * 3);
-  switch (randomNumber) {
-    case 1:
-      return "rock";
-      break;
-    case 2:
-      return "paper";
-      break;
-    case 3:
-      return "scissors";
-      break;
-  }
-};
+const rockButton = document.querySelector(".fa-hand-rock-o");
+const scissorsButton = document.querySelector(".fa-hand-scissors-o");
+const paperButton = document.querySelector(".fa-hand-paper-o");
+const playerChoiceImage = document.querySelector(".player-choice img");
+const CPUChoiceImage = document.querySelector(".cpu-choice img");
+const victoryText = document.querySelector(".results p");
+const gameTitle = document.querySelector(".title");
+const sections = document.querySelectorAll("section");
+const mainContainer = document.querySelector("main");
+const resultsSection = document.querySelector(".results")
+const body = document.body;
+const startGameButtonSection = document.querySelector(".initial-button")
+const startGameButton = document.querySelector("button");
+const inputRounds = document.querySelector("#input-rounds");
+let numberOfRounds = 0;
 
-const askPlayerOption = function () {
-  let playersChoice = prompt("Please select 'rock', 'paper' or 'scissors'");
 
-  if(playersChoice) {
-    playersChoice = playersChoice.toLowerCase().trim();
-  }
 
-  if (playersChoice === null) {
-    alert("Sad you don't want to play");
-    return;
-  } else if (!playersChoice || playersChoice === "0") {
-    alert("Wrong input. Please choose 'rock', 'paper' or 'scissors'.")
-  } else {
-    return playersChoice;
-  }
-};
 
-const userPlay = function () {
-  let playersChoice = askPlayerOption();
-  switch (playersChoice) {
-    case "rock":
-      return "rock";
-      break;
-    case "paper":
-      return "paper";
-      break;
-    case "scissors":
-      return "scissors";
-      break;
-  }
-};
+const ROCK = "rock";
+const PAPER = "paper";
+const SCISSORS = "scissors";
 
 const cpuWins = "The CPU has won.";
 const userWins = "The player has won.";
 const drawGame = "It's a tie!";
 
+let round = 0;
+let playerCount = 0;
+let cpuCount = 0;
+let tieGame = 0;
+
+const computerPlay = function () {
+  let randomNumber = Math.ceil(Math.random() * 3);
+  switch (randomNumber) {
+    case 1:
+      CPUChoiceImage.src = "images/rock.png";
+      return ROCK;
+    case 2:
+      CPUChoiceImage.src = "images/paper.png";
+      return PAPER;
+    case 3:
+      CPUChoiceImage.src = "images/scissors.png";
+      return SCISSORS;
+  }
+};
+
+const askPlayerOption = function () {};
+
 const playRound = function (playerSelection, computerSelection) {
   if (playerSelection === computerSelection) {
     return drawGame;
   } else {
-    if (playerSelection === "rock") {
+    if (playerSelection === ROCK) {
       switch (computerSelection) {
-        case "paper":
+        case PAPER:
           return cpuWins;
-          break;
-        case "scissors":
+
+        case SCISSORS:
           return userWins;
-          break;
       }
-    } else if (playerSelection === "paper") {
+    } else if (playerSelection === PAPER) {
       switch (computerSelection) {
-        case "rock":
-          return "The player has won. ";
-          break;
-        case "scissors":
-          return cpuWins;
-          break;
-      }
-    } else if (playerSelection === "scissors") {
-      switch (computerSelection) {
-        case "rock":
-          return cpuWins;
-          break;
-        case "paper":
+        case ROCK:
           return userWins;
-          break;
+
+        case SCISSORS:
+          return cpuWins;
+      }
+    } else if (playerSelection === SCISSORS) {
+      switch (computerSelection) {
+        case ROCK:
+          return cpuWins;
+
+        case PAPER:
+          return userWins;
       }
     }
   }
 };
 
-const logResults = function(playerCount, cpuCount, tieGame, score) {
-  console.log(
-    `${score}: Player Count: ${playerCount}, CPU count: ${cpuCount}, tie games: ${tieGame}`)
+
+const removeInvisibleSection = (section) => {
+  if (section.classList.contains("invisible")) {
+    section.classList.remove("invisible");
+  }
 }
 
-const game = function () {
-  let playerCount = 0;
-  let cpuCount = 0;
-  let tieGame = 0;
-  let score = "Score: "
-  let finalScore = "Final score: "
-
-  for (let i = 0; i < 5; i++) {
-    let match = playRound(userPlay(), computerPlay());
-    
-    if (!match) {
-      return;
-    } else if (match === cpuWins) {
-      console.log(cpuWins);
-      cpuCount++;
-      logResults(playerCount, cpuCount, tieGame, score);
-    } else if (match === userWins) {
-      console.log(userWins);
-      playerCount++;
-      logResults(playerCount, cpuCount, tieGame, score);;
-    } else if (match === drawGame) {
-      console.log(drawGame);
-      tieGame++;
-      logResults(playerCount, cpuCount, tieGame, score);;
-    }
-  }
+const makeVisibleGame = (sections) => {
   
-  if (playerCount > cpuCount) {
-    console.log("The player is victorious!");
-  } else if (cpuCount > playerCount) {
-    console.log("The CPU is victorious!");
-  } else {
-    console.log("It's a draw!");
-  }
-  logResults(playerCount, cpuCount, tieGame, finalScore);
+  sections.forEach(section => {
+    if (!(section.classList.contains("invisible"))) {
+      section.classList.add("invisible");
+    } else {
+      section.classList.remove("invisible");
+    }
+    
+  })
+}
+
+
+
+const changeRoundNumber = () => {
+  const roundTitle = document.querySelector(".round-number");
+  roundTitle.innerText = round;
+  return roundTitle;
 };
 
-game();
+const changePlayerVictoryNumber = () => {
+  const victoryNumber = document.querySelector(".win-player p");
+  victoryNumber.innerText = playerCount;
+  return victoryNumber;
+};
+
+const changeCPUVictoryNumber = () => {
+  const victoryNumber = document.querySelector(".win-cpu p");
+  victoryNumber.innerText = cpuCount;
+  return victoryNumber;
+};
+
+const changeTieNumber = () => {
+  const victoryNumber = document.querySelector(".ties p");
+  victoryNumber.innerText = tieGame;
+  return victoryNumber;
+};
+
+const changeVictoryText = (message) => {
+  victoryText.innerText = "";
+  victoryText.innerText = message;
+  return victoryText;
+};
+
+const logResults = function (playerCount, cpuCount, tieGame) {
+  mainContainer.classList.remove("container"); 
+  mainContainer.classList.add("center-title");
+  sections.forEach((section) => {
+    if(!(section.classList.contains("title") && !(section.classList.contains("initial-button") ))) {
+      section.classList.add("invisible")
+    } else {
+      section.classList.toggle("center-title")
+    }
+    
+  })
+  const resultParagraph = document.createElement("p");
+  const span = document.createElement("p");
+  resultParagraph.innerText = `Player victories: ${playerCount}. CPU victories: ${cpuCount}. Tie matches: ${tieGame}.`;
+  if (playerCount > cpuCount) {
+    span.innerText = "The player is victorious!";
+    
+  } else if (cpuCount > playerCount) {
+    span.innerText = "The CPU is victorious!";
+  } else {
+    span.innerText = "Tie game!";
+  }
+  span.classList.add("winner")
+  gameTitle.appendChild(span);
+  gameTitle.appendChild(resultParagraph);
+};
+
+
+const createReloadButton = () => {
+  const reloadButton = document.createElement("button");
+  reloadButton.innerText = "Reload Page";
+  reloadButton.classList.add("reload");
+  gameTitle.appendChild(reloadButton);
+  reloadButton.addEventListener("click", () => {
+    location.reload()
+  })
+}
+
+const checkIfRoundIs5 = () => {
+  console.log("round is", round);
+  console.log("la partida es de", numberOfRounds);
+  console.log(round === numberOfRounds);
+  if (round === numberOfRounds) {
+   
+    gameTitle.innerText = "";
+    logResults(playerCount, cpuCount, tieGame);
+    createReloadButton();
+   
+  }
+}
+
+
+
+const game = function (match) {
+
+  
+   
+  if (match === cpuWins) {
+    cpuCount++;
+    round = round + 1;
+    changeVictoryText(cpuWins);
+  } else if (match === userWins) {
+    playerCount++;
+    round = round + 1;
+    changeVictoryText(userWins);
+  } else if (match === drawGame) {
+    tieGame++;
+    round = round + 1;
+    changeVictoryText(drawGame);
+  }
+
+  changeRoundNumber(round);
+  changePlayerVictoryNumber();
+  changeCPUVictoryNumber();
+  changeTieNumber();
+  
+  checkIfRoundIs5();
+  
+};
+
+// Game in itself
+
+let match;
+let playersChoice;
+
+rockButton.addEventListener("click", () => {
+  
+  playersChoice = ROCK;
+  playerChoiceImage.src = "images/rock.png";
+  match = playRound(playersChoice, computerPlay());
+  game(match);
+});
+
+scissorsButton.addEventListener("click", () => {
+  
+  playersChoice = SCISSORS;
+  playerChoiceImage.src = "images/scissors.png";
+  match = playRound(playersChoice, computerPlay());
+  game(match);
+});
+
+paperButton.addEventListener("click", () => {
+  
+  playersChoice = PAPER;
+  playerChoiceImage.src = "images/paper.png";
+  match = playRound(playersChoice, computerPlay());
+  game(match);
+});
+
+startGameButton.addEventListener("click", ()=> {
+  numberOfRounds = Number(inputRounds.value);
+  
+  makeVisibleGame(sections);
+  startGameButtonSection.classList.add("invisible");
+  
+})
+
